@@ -1,31 +1,37 @@
-const slides = Array.from(document.querySelectorAll(".slider__item"));
+const slides = Array.from(document.querySelectorAll('.slider__item'));
+const dots = Array.from(document.querySelectorAll('.slider__dot'));
+const arrowPrev = document.querySelector('.slider__arrow_prev');
+const arrowNext = document.querySelector('.slider__arrow_next');
+let targetSlide = 0;
 
-
-const arrowRight = document.querySelector('.slider__arrow_next');
-const arrowLeft = document.querySelector('.slider__arrow_prev');
-
-let slide = 0;
-
-arrowRight.onclick = function () {
-    if (slide == (slides.length - 1)) {
-        slides[0].classList.add(`slider__item_active`);
-        slides[slide].classList.remove(`slider__item_active`);
-        slide = 0        
-    } else {
-        slides[slide + 1].classList.add(`slider__item_active`);
-        slides[slide].classList.remove(`slider__item_active`);
-        slide++
-    }
+const removeClass = (index) => {
+   slides[index].classList.remove('slider__item_active');
+   dots[index].classList.remove('slider__dot_active');
 }
 
-arrowLeft.onclick = function () {
-    if (slide == 0) {
-        slides[slides.length - 1].classList.add(`slider__item_active`);
-        slides[0].classList.remove(`slider__item_active`);
-        slide = slides.length - 1               
-    } else {
-        slides[slide - 1].classList.add(`slider__item_active`);
-        slides[slide].classList.remove(`slider__item_active`);
-        slide -=1 
-    }
+const addClass = (index) => {
+   slides[index].classList.add('slider__item_active');
+   dots[index].classList.add('slider__dot_active');
 }
+
+arrowNext.onclick = () => {
+   removeClass(targetSlide);
+   if (targetSlide >= slides.length - 1) targetSlide = -1;
+   targetSlide++;
+   addClass(targetSlide);
+}
+
+arrowPrev.onclick = () => {
+   removeClass(targetSlide);
+   if (targetSlide === 0) targetSlide = slides.length;
+   targetSlide--;
+   addClass(targetSlide);
+}
+
+dots.forEach((item, index) => {
+   item.onclick = () => {
+      removeClass(targetSlide);
+      targetSlide = index;
+      addClass(targetSlide);
+   }
+})
